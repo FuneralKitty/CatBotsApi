@@ -1,21 +1,51 @@
 import configparser
 import psycopg2
+from psycopg2 import OperationalError, sql
 
-def get_db_config(filename='config.ini', section='database'):
-    parser = configparser.ConfigParser()
-    parser.read(filename)
+class Database:
+    def __init__(self):
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+        self.host = config['database']['host']
+        self.user = config['database']['user']
+        self.password = config['database']['password']
+        self.port = config['database']['port']
+        self.dbname = config['database']['dbname']
 
-    db = {}
-    if parser.has_section(section):
-        params = parser.items(section)
-        for param in params:
-            db[param[0]] = param[1]
-    else:
-        raise Exception(f'Section {section} not found in the {filename} file')
+        self.cur = None
+        self.conn = None
 
-    return db
+    def establish_connection(self):
+        try:
+            self.conn = psycopg2.connect(
+                host=self.host,
+                dbname=self.dbname,
+                user=self.user,
+                password=self.password,
+                port=self.port
+            )
+            self.cur = self.conn.cursor()
+            print("Connection established successfully.")
+        except psycopg2.Error as e:
+            print("Error:", e)
+            raise
 
-def connect():
-    config = get_db_config()
-    conn = psycopg2.connect(**config)
-    return conn
+    def close_connection(self):
+        if self.cur is not None:
+            self.cur.close()
+        if self.conn is not None:
+            self.conn.close()
+        print("Connection closed successfully.")
+
+db = Database()
+
+try:
+    db.establish_connection()
+    db.cur.execute("SELECT name, color, tail_length FROM cats")
+    results = db.cur.fetchall()
+    for row in results:
+        print(row)
+except psycopg2.Error as e:
+    print("Error executing query:", e)
+finally:
+    db.close_connection()
