@@ -4,6 +4,8 @@ POSTGRES_USER=wg_forge
 POSTGRES_PASSWORD=42a
 PORT=5433
 
+all:
+
 run:
 	docker run --name $(CONTAINER_NAME) \
 	  -e POSTGRES_DB=$(POSTGRES_DB) \

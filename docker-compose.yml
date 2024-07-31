@@ -3,16 +3,30 @@ version: '3.8'
 services:
   postgres:
     restart: always
-    image: yzh44yzh/wg_forge_backend_env:1.1
-    environment:
-      POSTGRES_HOST: localhost
-      POSTGRES_DB: wg_forge_backend
-      POSTGRES_USER: wg_forge
-      POSTGRES_PASSWORD: password
+    container_name: postgres
+    image: postgres:latest
     ports:
       - "5435:5432"
     volumes:
-      - postgres_data:/CatBotsApi/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: wg_forge
+      POSTGRES_PASSWORD: 42a
+      POSTGRES_DB: wg_forge_backend
+
+  app:
+    image: yzh44yzh/wg_forge_backend_env:1.1
+    platform: linux/amd64
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: wg_forge
+      DB_PASSWORD: 42a
+      DB_NAME: wg_forge_backend
+    ports:
+      - "8080:8080"
 
 volumes:
   postgres_data:

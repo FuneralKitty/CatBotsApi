@@ -41,7 +41,7 @@ db = Database()
 
 try:
     db.establish_connection()
-    db.cur.execute("SELECT name, color, tail_length FROM cats")
+    db.cur.execute("SELECT (name, color, tail_length) FROM cats")
     results = db.cur.fetchall()
     for row in results:
         print(row)
