@@ -2,7 +2,7 @@ import psycopg2
 from config import *
 
 
-def main():
+def first_quest():
     try:
         # Connect to the PostgreSQL database
         with psycopg2.connect(database=database, user=user, password=password, port=port) as connection:
@@ -36,4 +36,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    first_quest()
