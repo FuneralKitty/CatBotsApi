@@ -1,23 +1,44 @@
-CONTAINER_NAME=d176ef7394ba
-POSTGRES_DB=wg_forge_db
-POSTGRES_USER=wg_forge
-POSTGRES_PASSWORD=42a
-PORT=5433
+APP_CONTAINER = poll-app
+DC = docker compose
+EXEC = docker exec -it
+LOGS = docker logs
 
-all:
+.PHONY: app 
+app:
+	${DC} up --build -d
 
-run:
-	docker run --name $(CONTAINER_NAME) \
-	  -e POSTGRES_DB=$(POSTGRES_DB) \
-	  -e POSTGRES_USER=$(POSTGRES_USER) \
-	  -e POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
-	  -p $(PORT):5432 \
-	  -d postgres
+.PHONY: app-restart
+app-restart:
+	${DC} restart
 
-stop:
-	docker stop $(CONTAINER_NAME)
+.PHONY: app-down
+app-down:
+	${DC} down
 
-remove:
-	docker rm $(CONTAINER_NAME)
+.PHONY: app-logs
+app-logs:
+	${LOGS} ${APP_CONTAINER}
 
-.PHONY: run stop remove
+.PHONY: app-shell
+app-shell:
+	${EXEC} ${APP_CONTAINER} /bin/bash
+
+.PHONY: tests
+tests:
+	${EXEC} ${APP_CONTAINER} pytest -vs
+
+.PHONY: check-flake8
+check-flake8:
+	${EXEC} ${APP_CONTAINER} flake8 .
+
+.PHONY: check-black
+check-black:
+	${EXEC} ${APP_CONTAINER} black --check .
+
+.PHONY: check-isort
+check-isort:
+	${EXEC} ${APP_CONTAINER} isort --check .
+
+.PHONY: fix-black
+fix-black-isort:
+	${EXEC} ${APP_CONTAINER} black . ; ${EXEC} ${APP_CONTAINER} isort .
