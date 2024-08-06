@@ -8,7 +8,7 @@ services:
     ports:
       - "5435:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/src/data
     environment:
       POSTGRES_USER: wg_forge
       POSTGRES_PASSWORD: 42a
