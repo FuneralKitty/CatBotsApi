@@ -1,21 +1,28 @@
 import psycopg
 from config import *
 
-
 def first_quest():
+    connection = None  # Инициализируем переменную connection
+
     try:
-        # Connect to the PostgreSQL database
-        with psycopg.connect(database=database, user=user, password=password, port=port) as connection:
+        # Подключение к базе данных PostgreSQL
+        with psycopg.connect(
+            dbname=database,
+            user=user,
+            password=password,
+            host=host,
+            port=port
+        ) as connection:
             with connection.cursor() as cursor:
-                # Fetch the PostgreSQL version
+                # Получаем версию PostgreSQL
                 cursor.execute('SELECT version()')
                 version = cursor.fetchone()
                 print(f"PostgreSQL version: {version[0]}")
 
-                # Delete existing records from cat_colors_info
+                # Удаляем существующие записи из cat_colors_info
                 cursor.execute("DELETE FROM cat_colors_info")
 
-                # Insert color count data into cat_colors_info
+                # Вставляем данные о количестве цветов в cat_colors_info
                 cursor.execute("""
                     INSERT INTO cat_colors_info (color, count)
                     SELECT color, COUNT(*)
@@ -23,7 +30,7 @@ def first_quest():
                     GROUP BY color
                 """)
 
-                # Commit the transaction
+                # Фиксируем транзакцию
                 connection.commit()
 
     except psycopg.Error as e:

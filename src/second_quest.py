@@ -1,6 +1,6 @@
 import psycopg
 from second_quest_arithmetic import *
-
+from config import *
 def save_stats(cursor, stats):
     cursor.execute("""
     INSERT INTO cats_stat( 
@@ -13,8 +13,16 @@ def save_stats(cursor, stats):
 
 def second_quest():
     try:
-        with psycopg.connect(database='wg_forge_db', user='wg_forge', password='42a', port='5432') as connection:
+        # Подключение к базе данных PostgreSQL
+        with psycopg.connect(
+                dbname=database,
+                user=user,
+                password=password,
+                host=host,
+                port=port
+        ) as connection:
             with connection.cursor() as cursor:
+
                 # Длина хвоста
                 tail_length_mean = mean(cursor, 'tail_length')
                 tail_length_median = mediana(cursor, 'tail_length')
@@ -24,6 +32,8 @@ def second_quest():
                 whiskers_length_mean = mean(cursor, 'whiskers_length')
                 whiskers_length_median = mediana(cursor, 'whiskers_length')
                 whiskers_length_mode = mode(cursor, 'whiskers_length')
+
+                cursor.execute("DELETE FROM cats_stat")
 
                 # Сохранение данных в таблицу
                 save_stats(cursor, (
