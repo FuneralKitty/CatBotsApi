@@ -1,4 +1,4 @@
-import psycopg2
+import psycopg
 from second_quest_arithmetic import *
 
 def save_stats(cursor, stats):
@@ -13,7 +13,7 @@ def save_stats(cursor, stats):
 
 def second_quest():
     try:
-        with psycopg2.connect(database='wg_forge_db', user='wg_forge', password='42a', port='5432') as connection:
+        with psycopg.connect(database='wg_forge_db', user='wg_forge', password='42a', port='5432') as connection:
             with connection.cursor() as cursor:
                 # Длина хвоста
                 tail_length_mean = mean(cursor, 'tail_length')

@@ -1,11 +1,11 @@
-import psycopg2
+import psycopg
 from config import *
 
 
 def first_quest():
     try:
         # Connect to the PostgreSQL database
-        with psycopg2.connect(database=database, user=user, password=password, port=port) as connection:
+        with psycopg.connect(database=database, user=user, password=password, port=port) as connection:
             with connection.cursor() as cursor:
                 # Fetch the PostgreSQL version
                 cursor.execute('SELECT version()')
@@ -26,7 +26,7 @@ def first_quest():
                 # Commit the transaction
                 connection.commit()
 
-    except psycopg2.Error as e:
+    except psycopg.Error as e:
         print(f"Database error: {e}")
 
     finally:
