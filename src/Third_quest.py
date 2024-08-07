@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import psycopg
-from config import DB_CONFIG
+from src.config import DB_CONFIG
 
 app = Flask(__name__)
 valid_attributes = ['name', 'color', 'tail_length', 'whiskers_length']

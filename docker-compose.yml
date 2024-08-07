@@ -1,24 +1,27 @@
 version: '3.8'
 
 services:
-postgres:
-    image: postgres:latest
-    volumes:
-        - /var/lib/postgres
-    environment:
-        POSTGRES_DB: wg_forge_db
-        POSTGRES_USER: wg_forge
-        POSTGRES_PASSWORD: 42a
 
-
+  postgres:
+      image: postgres:latest
+      volumes:
+          - postgres_data:/var/lib/postgresql
+      env_file: .env
+      ports:
+        - "35432:5432"
 
   app:
-    image: yzh44yzh/wg_forge_backend_env:1.1
-    platform: linux/amd64
+
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - postgres
+    env_file: .env
     ports:
-      - "8080:8080"
+      - "5000:5000"
+    volumes:
+      - .:/app
 
 volumes:
   postgres_data:
