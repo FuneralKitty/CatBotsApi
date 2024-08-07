@@ -1,30 +1,22 @@
 version: '3.8'
 
 services:
-  postgres:
-    restart: always
-    container_name: postgres
+postgres:
     image: postgres:latest
-    ports:
-      - "5435:5432"
     volumes:
-      - postgres_data:/var/lib/src/data
+        - /var/lib/postgres
     environment:
-      POSTGRES_USER: wg_forge
-      POSTGRES_PASSWORD: 42a
-      POSTGRES_DB: wg_forge_backend
+        POSTGRES_DB: wg_forge_db
+        POSTGRES_USER: wg_forge
+        POSTGRES_PASSWORD: 42a
+
+
 
   app:
     image: yzh44yzh/wg_forge_backend_env:1.1
     platform: linux/amd64
     depends_on:
       - postgres
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: wg_forge
-      DB_PASSWORD: 42a
-      DB_NAME: wg_forge_backend
     ports:
       - "8080:8080"
 
