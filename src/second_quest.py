@@ -1,6 +1,5 @@
 import psycopg
-from second_quest_arithmetic import *
-from config import DB_CONFIG
+from src.second_quest_arithmetic import *
 
 
 def save_stats(cursor, stats):
@@ -13,7 +12,7 @@ def save_stats(cursor, stats):
     )
     """, stats)
 
-def second_quest():
+def second_quest(DB_CONFIG):
     try:
          with psycopg.connect(**DB_CONFIG) as connection:
             with connection.cursor() as cursor:

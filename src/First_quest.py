@@ -1,7 +1,16 @@
 import psycopg
-from config import DB_CONFIG
 
-def first_quest():
+def table_exists(cursor, table_name):
+    cursor.execute("""
+    SELECT EXISTS (
+        SELECT 1 
+        FROM information_schema.tables 
+        WHERE table_name = %s
+    );
+    """, (table_name,))
+    return cursor.fetchone()[0]
+
+def first_quest(DB_CONFIG):
     connection = None
 
     try:
