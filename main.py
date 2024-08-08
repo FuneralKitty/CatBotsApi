@@ -3,7 +3,6 @@ import psycopg
 from src.config import DB_CONFIG
 from src.First_quest import first_quest
 from src.second_quest import second_quest
-from src.database_utils import table_exists
 
 app = Flask(__name__)
 
@@ -54,23 +53,6 @@ def data_parser():
 
 
 if __name__ == '__main__':
-    try:
-        with psycopg.connect(**DB_CONFIG) as connection:
-            with connection.cursor() as cursor:
-                exists = table_exists(cursor, 'cats')
-                print(f"Table 'cats' exists: {exists}")
-                if not exists:
-                    # Execute the SQL script only if the tables don't exist
-                    with open("data.sql", "r") as data:
-                        cursor.execute(data.read())
-                        connection.commit()
-                    print("Tables created successfully.")
-                else:
-                    print("Tables already exist, skipping creation.")
-    except Exception as e:
-        print(f"Error occurred: {e}")
-    else:
-        first_quest(DB_CONFIG)
-        second_quest(DB_CONFIG)
-        app.run(host='0.0.0.0', port=8080)
-
+    first_quest(DB_CONFIG)
+    second_quest(DB_CONFIG)
+    app.run(host='0.0.0.0', port=8080)
