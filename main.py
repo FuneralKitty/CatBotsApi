@@ -9,9 +9,11 @@ app = Flask(__name__)
 
 valid_attributes = ['name', 'color', 'tail_length', 'whiskers_length']
 
+
 @app.route('/ping', methods=['GET'])
 def ping():
     return "Cats Service. Version 0.1", 200
+
 
 @app.route('/cats', methods=['GET'])
 def data_parser():
@@ -40,8 +42,8 @@ def data_parser():
                 return jsonify({'error': 'No cats found'}), 404
 
             data = [
-                {'name': cat[0],'color': cat[1],'tail_length': cat[2],'whiskers_length': cat[3]}
-            for cat in cats
+                {'name': cat[0], 'color': cat[1], 'tail_length': cat[2], 'whiskers_length': cat[3]}
+                for cat in cats
             ]
             return jsonify(data), 200
     except Exception as e:
@@ -49,6 +51,7 @@ def data_parser():
     finally:
         if conn:
             conn.close()
+
 
 if __name__ == '__main__':
     with psycopg.connect(**DB_CONFIG) as connection:
