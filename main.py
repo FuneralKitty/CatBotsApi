@@ -54,13 +54,23 @@ def data_parser():
 
 
 if __name__ == '__main__':
-    with psycopg.connect(**DB_CONFIG) as connection:
-        with connection.cursor() as cursor:
-            if not table_exists(cursor, 'cats'):
-                # Execute the SQL script only if the tables don't exist
-                with open("data.sql", "r") as data:
-                    cursor.execute(data.read())
-                    connection.commit()
-    first_quest(DB_CONFIG)
-    second_quest(DB_CONFIG)
-    app.run(host='0.0.0.0', port=8080)
+    try:
+        with psycopg.connect(**DB_CONFIG) as connection:
+            with connection.cursor() as cursor:
+                exists = table_exists(cursor, 'cats')
+                print(f"Table 'cats' exists: {exists}")
+                if not exists:
+                    # Execute the SQL script only if the tables don't exist
+                    with open("data.sql", "r") as data:
+                        cursor.execute(data.read())
+                        connection.commit()
+                    print("Tables created successfully.")
+                else:
+                    print("Tables already exist, skipping creation.")
+    except Exception as e:
+        print(f"Error occurred: {e}")
+    else:
+        first_quest(DB_CONFIG)
+        second_quest(DB_CONFIG)
+        app.run(host='0.0.0.0', port=8080)
+

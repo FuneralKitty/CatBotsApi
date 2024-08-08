@@ -1,17 +1,15 @@
 version: '3.8'
 
 services:
-
   postgres:
-      image: postgres:latest
-      volumes:
-          - postgres_data:/var/lib/postgresql
-      env_file: .env
-      ports:
-        - "35432:5432"
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    env_file: .env
+    ports:
+      - "35432:5432"
 
   app:
-
     build:
       context: .
       dockerfile: Dockerfile
@@ -19,9 +17,10 @@ services:
       - postgres
     env_file: .env
     ports:
-      - "5000:5000"
+      - "8080:5000"
     volumes:
       - .:/app
+    mem_limit: 1g  # Limit memory usage to 1 GB
 
 volumes:
   postgres_data:
