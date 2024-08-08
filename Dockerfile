@@ -1,7 +1,12 @@
 FROM python:3.12
 WORKDIR /app
-COPY requirements.txt /app
-RUN sudo apt install gunicorn
-RUN pip install --upgrade pip
+
+COPY . /app/
+
+RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
-ADD . /app
+
+
+CMD ["gunicorn", "main", "--w", "1", "--b", "0.0.0.0:8000"]
+
+EXPOSE 8000
