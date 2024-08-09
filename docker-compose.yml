@@ -23,4 +23,4 @@ services:
       - .:/app
     ports:
       - 8000:8000
-    command: bash -c "python -m gunicorn -w 1 -b 0.0.0.0:8000 main:app"
+    command: bash -c "python -m gunicorn -w 5 -b 0.0.0.0:8000 main:app"

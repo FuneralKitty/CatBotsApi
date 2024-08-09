@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-# import psycopg
+import psycopg
 # from src.config import DB_CONFIG
 # from src.First_quest import first_quest
 # from src.second_quest import second_quest
@@ -55,4 +55,4 @@ def ping():
 # if __name__ == '__main__':
 #     first_quest(DB_CONFIG)
 #     second_quest(DB_CONFIG)
-#     app.run(host='0.0.0.0', port=8080)
+
