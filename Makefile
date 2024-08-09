@@ -42,5 +42,5 @@ help:
 	@echo "  ps            Показать статус контейнеров"
 	@echo "  logs          Просмотр логов в реальном времени"
 	@echo "  clean         Остановить контейнеры и удалить образы и тома"
-	@echo "  app-shell     Запустить bash внутри контейнера app"
+	@echo "  app-shell     Запуск bash внутри контейнера app"
 	@echo "  postgres-shell Запустить bash внутри контейнера postgres"
