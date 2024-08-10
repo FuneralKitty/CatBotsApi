@@ -1,47 +1,47 @@
-APP_CONTAINER = poll-app
-DC = docker compose
-EXEC = docker exec -it
-LOGS = docker logs
+# Имя файла Docker Compose
+COMPOSE_FILE=docker-compose.yml
 
-# .PHONY: app
-# app:
-# 	${DC} up --build -d
-#
-# .PHONY: app-restart
-# app-restart:
-# 	${DC} restart
-#
-# .PHONY: app-down
-# app-down:
-# 	${DC} down
-#
-# .PHONY: app-logs
-# app-logs:
-# 	${LOGS} ${APP_CONTAINER}
-#
-# .PHONY: app-shell
-# app-shell:
-# 	${EXEC} ${APP_CONTAINER} /bin/bash
-#
-# .PHONY: tests
-# tests:
-# 	${EXEC} ${APP_CONTAINER} pytest -vs
-#
-# .PHONY: check-flake8
-# check-flake8:
-# 	${EXEC} ${APP_CONTAINER} flake8 .
-#
-# .PHONY: check-black
-# check-black:
-# 	${EXEC} ${APP_CONTAINER} black --check .
-#
-# .PHONY: check-isort
-# check-isort:
-# 	${EXEC} ${APP_CONTAINER} isort --check .
-#
-# .PHONY: fix-black
-# fix-black-isort:
-# 	${EXEC} ${APP_CONTAINER} black . ; ${EXEC} ${APP_CONTAINER} isort .
-third:
-    python3 src/Third_quest.py
+# Сервисные команды
+up:
+	@docker-compose -f $(COMPOSE_FILE) up -d
+
+down:
+	@docker-compose -f $(COMPOSE_FILE) down
+
+restart:
+	@docker-compose -f $(COMPOSE_FILE) down
+	@docker-compose -f $(COMPOSE_FILE) up -d
+
+build:
+	@docker-compose -f $(COMPOSE_FILE) build
+
+ps:
+	@docker-compose -f $(COMPOSE_FILE) ps
+
+logs:
+	@docker-compose -f $(COMPOSE_FILE) logs -f
+
+clean:
+	@docker-compose -f $(COMPOSE_FILE) down --rmi all --volumes --remove-orphans
+
+# Команды для отдельных сервисов
+app-shell:
+	@docker-compose -f $(COMPOSE_FILE) exec app bash
+
+postgres-shell:
+	@docker-compose -f $(COMPOSE_FILE) exec postgres bash
+
+# Команда для просмотра справки
+help:
+	@echo "Usage: make [command]"
+	@echo "Commands:"
+	@echo "  up            Поднять контейнеры"
+	@echo "  down          Остановить и удалить контейнеры"
+	@echo "  restart       Перезапустить контейнеры"
+	@echo "  build         Собрать контейнеры"
+	@echo "  ps            Показать статус контейнеров"
+	@echo "  logs          Просмотр логов в реальном времени"
+	@echo "  clean         Остановить контейнеры и удалить образы и тома"
+	@echo "  app-shell     Запуск bash внутри контейнера app"
+	@echo "  postgres-shell Запустить bash внутри контейнера postgres"
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Getting started
 This project is a solution for the next test task
 https://github.com/itc-code/test-assignments/tree/main/backend-cats-api
@@ -27,3 +28,5 @@ To run the third quest
    python3 src/Third_quest.py
    ```
 ### Usage
+=======
+>>>>>>> dev
