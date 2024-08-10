@@ -1,0 +1,25 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:latest
+    env_file: .env
+    volumes:
+      - ./postgres_data:/var/lib/postgresql
+      - ./data.sql:/docker-entrypoint-initdb.d/001.sql
+    ports:
+      - "35433:5432"
+
+  app:
+    image: python:3.11.2
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    command: flask run --host=0.0.0.0 --port=8000
+    env_file: .env
+    depends_on:
+      - postgres
