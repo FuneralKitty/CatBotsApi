@@ -3,12 +3,25 @@ version: '3.3'
 services:
   postgres:
     image: postgres:latest
-    env_file: .env
+    environment:
+      - POSTGRES_DB=wg_forge_db
+      - POSTGRES_USER=wg_forge
+      - POSTGRES_PASSWORD=42a
     volumes:
       - ./postgres_data:/var/lib/postgresql
       - ./data.sql:/docker-entrypoint-initdb.d/001.sql
-    ports:
-      - "35433:5432"
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U wg_forge -d wg_forge_db" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 10s
+#      restart: unless-stopped
+#      deploy:
+#        resources:
+#          limits:
+#            cpus: '1'
+#            memory: 4G
 
   app:
     image: python:3.11.2
@@ -19,7 +32,9 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    command: flask run --host=0.0.0.0 --port=8000
-    env_file: .env
+    command: flask run --host=0.0.0.0 --port=8000 --debug
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
     depends_on:
       - postgres

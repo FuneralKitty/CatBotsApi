@@ -33,7 +33,7 @@ def data_parser():
                 OFFSET %s LIMIT %s
                 """
     try:
-        conn = psycopg.connect(**DB_CONFIG)
+        conn = psycopg.connect(port='5432', database='wg_forge_db', user='wg_forge', host='localhost', password='42a')
         with conn.cursor() as cur:
             cur.execute(db_request, (offset, limit))
             cats = cur.fetchall()
