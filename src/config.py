@@ -5,6 +5,5 @@ DB_CONFIG = {
     'user': os.getenv('POSTGRES_USER'),
     'password': os.getenv('POSTGRES_PASSWORD'),
     'host': 'postgres',
-    'port': '35432'
+    'port': '5432'
 }
->>>>>>> dev

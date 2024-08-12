@@ -8,10 +8,9 @@ services:
       - ./postgres_data:/var/lib/postgresql
       - ./data.sql:/docker-entrypoint-initdb.d/001.sql
     ports:
-      - "35433:5432"
+      - "5432:5432"
 
   app:
-    image: python:3.11.2
     build:
       context: .
       dockerfile: Dockerfile
