@@ -1,6 +1,7 @@
 import psycopg
 from src.arithmetic_for_cats import *
 
+
 def save_stats(cursor, stats):
     cursor.execute("""
     INSERT INTO cats_stat(

@@ -27,6 +27,16 @@ To run the third quest
    ```
    python3 src/Third_quest.py
    ```
-### Usage
-=======
->>>>>>> dev
+
+Таски:
+добавить в requirements нужные либы
+add 
+pip install pytest pytest-flask pytest-mock
+
+дописать тесты на cats и postgresql
+
+
+оставить пока на месте.
+TO ADD A CAT FORM
+curl -X POST http://localhost:8080/cat -H "Content-Type: application/json" \
+-d "{\"name\": \"Tihon\", \"color\": \"red & white\", \"tail_length\": 15, \"whiskers_length\": 12}"

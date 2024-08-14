@@ -65,10 +65,11 @@ def validate_attributes(data):
         errors.append('Name is invalid')
     if 'color' not in data or not isinstance(data['color'], str):
         errors.append('Color is invalid')
-    if 'tail_length' not in data or not isinstance(data['tail_length'], (int, float)) or data['tail_length'] <= 0:
+    if 'tail_length' not in data or not isinstance(
+            data['tail_length'], (int, float)) or data['tail_length'] <= 0:
         errors.append('Tail_length is invalid')
-    if 'whiskers_length' not in data or not isinstance(data['whiskers_length'], (int, float)) or data[
-        'whiskers_length'] <= 0:
+    if 'whiskers_length' not in data or not isinstance(
+            data['whiskers_length'], (int, float)) or data['whiskers_length'] <= 0:
         errors.append('Whiskers_length is invalid')
 
     if errors:
@@ -88,7 +89,8 @@ def add_info():
     try:
         conn = psycopg.connect(**DB_CONFIG)
         with conn.cursor() as cur:
-            cur.execute("SELECT name FROM cats WHERE name = %s", (data['name'],))
+            cur.execute(
+                "SELECT name FROM cats WHERE name = %s", (data['name'],))
             existing_cat = cur.fetchone()
 
             if existing_cat:
