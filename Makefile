@@ -31,7 +31,10 @@ app-shell:
 postgres-shell:
 	@docker-compose -f $(COMPOSE_FILE) exec postgres bash
 
+test:
+	@docker-compose -f $(COMPOSE_FILE) exec app pytest
 # Команда для просмотра справки
+
 help:
 	@echo "Usage: make [command]"
 	@echo "Commands:"

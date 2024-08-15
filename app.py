@@ -54,6 +54,7 @@ def data_parser():
             ]
             return jsonify(data), 200
     except Exception as e:
+        app.logger.error(f"Error occurred: {str(e)}")
         return jsonify({'error': str(e)}), 500
     finally:
         if conn:
@@ -105,6 +106,7 @@ def add_info():
 
             return jsonify({'message': 'Cat added successfully'}), 201
     except Exception as e:
+        app.logger.error(f"Error occurred: {str(e)}")
         return jsonify({'error': str(e)}), 500
     finally:
         if conn:

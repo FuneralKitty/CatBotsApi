@@ -1,42 +1,92 @@
-<<<<<<< HEAD
-Getting started
-This project is a solution for the next test task
-https://github.com/itc-code/test-assignments/tree/main/backend-cats-api
+
+# CatBots API
+
+This repository contains a solution for the [backend-cats-api task](https://github.com/itc-code/test-assignments/tree/main/backend-cats-api). The project is built with Flask and PostgreSQL, running in Docker containers.
+
+## Overview
+
+The CatBots API allows you to manage and query a database of cats. You can add new entries, retrieve lists of cats with specific attributes, and handle common operations through a RESTful interface.
+
+### API Endpoints
+
+- **Add a Cat (POST)**
+  - Example:
+    ```sh
+    curl -X POST http://localhost:8080/cat \
+    -H "Content-Type: application/json" \
+    -d '{"name": "Tihon", "color": "red & white", "tail_length": 15, "whiskers_length": 12}'
+    ```
+
+- **Retrieve Cats (GET)**
+  - Example:
+    ```sh
+    curl -X GET "http://localhost:8080/cats?attribute=color&order=asc&offset=5&limit=2"
+    ```
+
 ## Installation
-1. Clone the repo
+
+### Prerequisites
+
+- Docker
+- Docker Compose
+
+### Setup
+
+1. **Clone the repository:**
    ```sh
-   git clone https://github.com/yourusername/repo.git
-   ```
-   Go to the repository 
-   ``` sh
+   git clone https://github.com/python52course/CatBotsApi.git
    cd CatBotsApi
    ```
 
-    To install the package enter the following command 
-    ```
-   pip3 install -r requirements.txt
-    ```
-Now u can proceed with the following commands 
+2. **Build and Start the Containers:**
+   You can use the provided Makefile for easy setup.
 
-To run first and second quest just run the main.py with command
-   #Cделать аскинему   
+   - Build the Docker images:
+     ```sh
+     make build
+     ```
+
+   - Start the containers:
+     ```sh
+     make up
+     ```
+
+   Alternatively, you can manually build and start the containers:
+
+   ```sh
+   docker-compose -f docker-compose.yml build
+   docker-compose -f docker-compose.yml up -d
    ```
-   python main.py
+
+3. **Check Available Make Commands:**
+   For additional commands and help, run:
+   ```sh
+   make help
    ```
-To run the third quest
-   ```
-   python3 src/Third_quest.py
-   ```
 
-Таски:
-добавить в requirements нужные либы
-add 
-pip install pytest pytest-flask pytest-mock
+### Ports
 
-дописать тесты на cats и postgresql
+- **Flask:** `8080` 
+- **PostgreSQL:** `5432`
 
+Ensure these ports are available and not used by other services.
 
-оставить пока на месте.
-TO ADD A CAT FORM
-curl -X POST http://localhost:8080/cat -H "Content-Type: application/json" \
--d "{\"name\": \"Tihon\", \"color\": \"red & white\", \"tail_length\": 15, \"whiskers_length\": 12}"
+## Testing
+
+The repository includes unit tests using `pytest`. You can run tests inside the Docker container with the following command:
+
+```sh
+make test
+```
+
+## Dependencies
+
+The following dependencies are managed within the Docker container, so you don’t need to install them manually:
+
+- `psycopg`
+- `Flask`
+- `pytest`
+
+## Additional Information
+
+This API is designed to be simple and extendable. If you encounter any issues or have questions, please refer to the [GitHub issues](https://github.com/python52course/CatBotsApi/issues) for support.
