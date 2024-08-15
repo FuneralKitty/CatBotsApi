@@ -23,6 +23,7 @@ def ping():
 @app.route('/cats', methods=['GET'])
 @limiter.limit("600 per minute")
 def data_parser():
+    conn = None
     attribute = request.args.get("attribute", default='name')
     order = request.args.get("order", default='asc')
     offset = request.args.get("offset", default=0, type=int)
@@ -81,7 +82,7 @@ def validate_attributes(data):
 @app.route('/cat', methods=['POST'])
 def add_info():
     data = request.get_json()
-
+    conn = None
     validation_response = validate_attributes(data)
     if validation_response:
         return validation_response

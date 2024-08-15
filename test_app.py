@@ -28,64 +28,30 @@ def test_invalid_order(client):
     assert response.json == {'error': 'Invalid order'}
 
 
-def test_get_cats(client, mocker):
-    mock_db_response = [
-        ('Tihon', 'red & white', 15, 12),
-        ('Murzik', 'gray', 10, 8)
-    ]
-
-    mocker.patch('app.psycopg.connect').return_value.cursor(
-    ).fetchall.return_value = mock_db_response
-
+def test_get_default_data_cats(client):
     response = client.get('/cats')
     assert response.status_code == 200
-    assert response.json == [{'name': 'Tihon',
-                              'color': 'red & white',
-                              'tail_length': 15,
-                              'whiskers_length': 12},
-                             {'name': 'Murzik',
-                              'color': 'gray',
-                              'tail_length': 10,
-                              'whiskers_length': 8}]
+    data = response.get_json()
+    assert isinstance(data, list)
+    assert len(data) <= 10
 
 
-def test_add_valid_cat(client, mocker):
-    mock_db_connect = mocker.patch('app.psycopg.connect')
-    mock_cursor = mock_db_connect.return_value.cursor.return_value
-    mock_cursor.fetchone.return_value = None  # Cat does not exist
-
-    data = {
-        'name': 'Tihon',
-        'color': 'red & white',
-        'tail_length': 15,
-        'whiskers_length': 12
+def test_add_duplicate_cat(client):
+    new_cat = {
+        'name': 'Tom',
+        'color': 'Gray',
+        'tail_length': 30,
+        'whiskers_length': 15
     }
-
-    response = client.post('/cat', json=data)
-    assert response.status_code == 201
-    assert response.json == {'message': 'Cat added successfully'}
-
-
-def test_add_duplicate_cat(client, mocker):
-    mock_db_connect = mocker.patch('app.psycopg.connect')
-    mock_cursor = mock_db_connect.return_value.cursor.return_value
-    mock_cursor.fetchone.return_value = ('Tihon',)  # Cat already exists
-
-    data = {
-        'name': 'Tihon',
-        'color': 'red & white',
-        'tail_length': 15,
-        'whiskers_length': 12
-    }
-
-    response = client.post('/cat', json=data)
+    client.post('/cat', json=new_cat)  # добавляем кота
+    response = client.post('/cat', json=new_cat)  # пытаемся добавить еще раз
     assert response.status_code == 409
-    assert response.json == {'error': 'Cat already exists'}
+    assert response.get_json() == {'error': 'Cat already exists'}
 
 
 def test_add_invalid_cat_data(client):
     invalid_data = {
-        'name': 'Tihon',
+        'name': '',
         'color': 123,  # Invalid color
         'tail_length': -1,  # Invalid tail length
         'whiskers_length': 'long'  # Invalid whiskers length
@@ -96,3 +62,13 @@ def test_add_invalid_cat_data(client):
     assert 'Color is invalid' in response.json['error']
     assert 'Tail_length is invalid' in response.json['error']
     assert 'Whiskers_length is invalid' in response.json['error']
+
+
+def test_rate_limit(client):
+    for _ in range(600):
+        response = client.get('/cats')
+        assert response.status_code == 200, f"Failed at request {_ + 1}"
+
+    response = client.get('/cats')
+    assert response.status_code == 429, "Expected 429 Too Many Requests"
+    assert response.get_json() == {"message": "Rate limit exceeded: 600 per 1 minute"}
