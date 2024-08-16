@@ -1,9 +1,10 @@
+import psycopg
 from src.config import DB_CONFIG
 from src.data_fullfilling import cat_colors_create_data, fullfill_cat_options
 from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-import psycopg
+
 
 app = Flask(__name__)
 limiter = Limiter(

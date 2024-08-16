@@ -1,4 +1,5 @@
 import pytest
+import time
 from flask import Flask
 from app import app
 
@@ -68,6 +69,7 @@ def test_rate_limit(client):
     for _ in range(600):
         response = client.get('/cats')
         assert response.status_code == 200, f"Failed at request {_ + 1}"
+        time.sleep(0.1)  # Добавляет 100 миллисекунд задержки между запросами
 
     response = client.get('/cats')
     assert response.status_code == 429, "Expected 429 Too Many Requests"

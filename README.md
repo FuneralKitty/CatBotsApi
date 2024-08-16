@@ -37,6 +37,15 @@ The CatBots API allows you to manage and query a database of cats. You can add n
    git clone https://github.com/python52course/CatBotsApi.git
    cd CatBotsApi
    ```
+   1. Create an .env file:
+       ```sh
+      echo "POSTGRES_DB=wg_forge_db
+            POSTGRES_USER=wg_forge
+            POSTGRES_PASSWORD=42a
+            FLASK_ENV=development
+            FLASK_APP=app.py
+            " > .env
+   ```
 
 2. **Build and Start the Containers:**
    You can use the provided Makefile for easy setup.
