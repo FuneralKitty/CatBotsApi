@@ -1,8 +1,14 @@
 import psycopg
 from typing import Optional, Any, List, Tuple, Dict
 from src.arithmetic_for_cats import mean, mediana, mode
+from psycopg_pool import ConnectionPool
+from config import DB_CONFIG
+
 
 valid_attributes: List[str] = ["name", "color", "tail_length", "whiskers_length"]
+pool = ConnectionPool(
+    conninfo=f"dbname={DB_CONFIG['dbname']} user={DB_CONFIG['user']} password={DB_CONFIG['password']} host={DB_CONFIG['host']} port={DB_CONFIG['port']}"
+)
 
 
 def save_stats(
@@ -100,7 +106,7 @@ def fullfill_cat_options(DB_CONFIG: Dict[str, Any]) -> None:
         print(f"An error occurred: {e}")
 
 
-def add_info_db(pool, data: Dict[str, Any]) -> Tuple[Dict[str, Any], int]:
+def add_info_db(data: Dict[str, Any]) -> Tuple[Dict[str, Any], int]:
     try:
         with pool.connection() as conn:
             with conn.cursor() as cur:
@@ -128,9 +134,8 @@ def add_info_db(pool, data: Dict[str, Any]) -> Tuple[Dict[str, Any], int]:
         return ({"error": str(e)}, 500)
 
 
-def get_parsed_data(
-    pool, attribute: str, order: str, offset: int, limit: int
-) -> Tuple[Dict[str, Any], int]:
+def get_parsed_data(attribute: str, order: str, offset: int, limit: int) -> tuple[dict[str, str], int] | tuple[
+    dict[str, str], int] | tuple[dict[str, str], int] | tuple[list[dict[str, Any]], int] | tuple[dict[str, str], int]:
     if attribute not in valid_attributes:
         return ({"error": "Invalid attribute"}, 400)
     if order not in ["asc", "desc"]:

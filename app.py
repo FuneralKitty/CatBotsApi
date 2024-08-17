@@ -1,6 +1,4 @@
-from typing import Optional, Any, Tuple, Dict
-import psycopg
-from psycopg_pool import ConnectionPool
+from typing import Any, Tuple, Dict
 from src.config import DB_CONFIG
 from src.data_fullfilling import (
     cat_colors_create_data,
@@ -13,9 +11,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 
-pool = ConnectionPool(
-    conninfo=f"dbname={DB_CONFIG['dbname']} user={DB_CONFIG['user']} password={DB_CONFIG['password']} host={DB_CONFIG['host']} port={DB_CONFIG['port']}"
-)
+
 
 app_name = "Cats Service"
 app = Flask(__name__)
@@ -37,9 +33,7 @@ def data_parser() -> tuple[Response, int]:
     offset = request.args.get("offset", default=0, type=int)
     limit = request.args.get("limit", default=10, type=int)
 
-    result: Tuple[Dict[str, str], int] = get_parsed_data(
-        pool, attribute, order, offset, limit
-    )
+    result: Tuple[Dict[str, str], int] = get_parsed_data(attribute, order, offset, limit)
     return jsonify(result[0]), result[1]
 
 
@@ -76,7 +70,7 @@ def add_info() -> tuple[dict[str, str], int] | tuple[Response, int]:
     if validation_response:
         return validation_response
 
-    result: Tuple[Dict[str, Any], int] = add_info_db(pool, data)
+    result: Tuple[Dict[str, Any], int] = add_info_db(data)
     return jsonify(result[0]), result[1]
 
 
