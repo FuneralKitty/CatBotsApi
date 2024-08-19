@@ -62,7 +62,7 @@ def add_info() -> tuple[dict[str, str], int] | tuple[Response, int]:
     except ValidationError as e:
         return jsonify({"error": e.errors()}), 400
 
-    result: Tuple[Dict[str, Any], int] = add_info_db(**data_cats.dict())
+    result: Tuple[Dict[str, Any], int] = add_info_db(data_cats.dict())
     return jsonify(result[0]), result[1]
 
 
