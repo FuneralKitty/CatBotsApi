@@ -2,7 +2,7 @@ import psycopg
 from typing import Optional, Any, List, Tuple, Dict
 from src.arithmetic_for_cats import mean, mediana, mode
 from psycopg_pool import ConnectionPool
-from config import DB_CONFIG
+from src.config import DB_CONFIG
 
 
 valid_attributes: List[str] = ["name", "color", "tail_length", "whiskers_length"]

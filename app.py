@@ -9,8 +9,7 @@ from src.data_fullfilling import (
 from flask import Flask, request, jsonify, Response
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-
-
+from pydantic import BaseModel, field_validator, ValidationError
 
 
 app_name = "Cats Service"
@@ -19,6 +18,25 @@ limiter = Limiter(
     app=app, key_func=get_remote_address, default_limits=["600 per minute"]
 )
 
+class Cat(BaseModel):
+    name: str
+    color: str
+    tail_length: int
+    whiskers_length: int
+
+    @classmethod
+    @field_validator('tail_length')
+    def check_tail_length(cls, value):
+        if value <= 0:
+            raise ValueError("Tail length must be greater than zero")
+        return value
+
+    @classmethod
+    @field_validator('whiskers_length')
+    def check_whiskers_length(cls, value):
+        if value <= 0:
+            raise ValueError("Whiskers length must be greater than zero")
+        return value
 
 @app.route("/ping", methods=["GET"])
 def ping() -> Tuple[str, int]:
@@ -37,40 +55,14 @@ def data_parser() -> tuple[Response, int]:
     return jsonify(result[0]), result[1]
 
 
-def validate_attributes(data) -> tuple[Response, int] | None:
-    # FIXMI: возможно сделать через pydantic
-    errors = []
-    if "name" not in data or not isinstance(data["name"], str):
-        errors.append("Name is invalid")
-    if "color" not in data or not isinstance(data["color"], str):
-        errors.append("Color is invalid")
-    if (
-        "tail_length" not in data
-        or not isinstance(data["tail_length"], (int, float))
-        or data["tail_length"] <= 0
-    ):
-        errors.append("Tail_length is invalid")
-    if (
-        "whiskers_length" not in data
-        or not isinstance(data["whiskers_length"], (int, float))
-        or data["whiskers_length"] <= 0
-    ):
-        errors.append("Whiskers_length is invalid")
-
-    if errors:
-        return jsonify({"error": " ".join(errors)}), 400
-
-    return None
-
-
 @app.route("/cat", methods=["POST"])
 def add_info() -> tuple[dict[str, str], int] | tuple[Response, int]:
-    data = request.get_json()
-    validation_response = validate_attributes(data)
-    if validation_response:
-        return validation_response
+    try:
+        data_cats = Cat(**request.get_json())
+    except ValidationError as e:
+        return jsonify({"error": e.errors()}), 400
 
-    result: Tuple[Dict[str, Any], int] = add_info_db(data)
+    result: Tuple[Dict[str, Any], int] = add_info_db(**data_cats.dict())
     return jsonify(result[0]), result[1]
 
 

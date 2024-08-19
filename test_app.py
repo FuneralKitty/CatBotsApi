@@ -54,9 +54,9 @@ def test_add_duplicate_cat(client: Flask) -> None:
 def test_add_invalid_cat_data(client: Flask) -> None:
     invalid_data: Dict[str, Union[str, int]] = {
         "name": "",
-        "color": 123,  # Invalid color
-        "tail_length": -1,  # Invalid tail length
-        "whiskers_length": "long",  # Invalid whiskers length
+        "color": 123,
+        "tail_length": -1,
+        "whiskers_length": "long",
     }
 
     response: Response = client.post("/cat", json=invalid_data)
@@ -70,7 +70,7 @@ def test_rate_limit(client: Flask) -> None:
     for _ in range(600):
         response: Response = client.get("/cats")
         assert response.status_code == 200, f"Failed at request {_ + 1}"
-        time.sleep(0.1)  # Добавляет 100 миллисекунд задержки между запросами
+        time.sleep(0.1)
 
     response: Response = client.get("/cats")
     assert response.status_code == 429, "Expected 429 Too Many Requests"

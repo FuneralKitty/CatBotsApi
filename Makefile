@@ -1,7 +1,5 @@
-# Имя файла Docker Compose
 COMPOSE_FILE=docker-compose.yml
 
-# Сервисные команды
 up:
 	@docker-compose -f $(COMPOSE_FILE) up -d
 
@@ -24,7 +22,6 @@ logs:
 clean:
 	@docker-compose -f $(COMPOSE_FILE) down --rmi all --volumes --remove-orphans
 
-# Команды для отдельных сервисов
 app-shell:
 	@docker-compose -f $(COMPOSE_FILE) exec app bash
 
@@ -33,7 +30,6 @@ postgres-shell:
 
 test:
 	@docker-compose -f $(COMPOSE_FILE) exec app pytest
-# Команда для просмотра справки
 
 help:
 	@echo "Usage: make [command]"
