@@ -1,5 +1,7 @@
 import os
+import dotenv
 
+dotenv.load_dotenv()
 DB_CONFIG = {
     "dbname": os.getenv("POSTGRES_DB"),
     "user": os.getenv("POSTGRES_USER"),
