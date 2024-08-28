@@ -3,6 +3,7 @@ import dotenv
 
 dotenv.load_dotenv()
 DB_CONFIG = {
+    "dsn_url": os.getenv("DSN"),
     "dbname": os.getenv("POSTGRES_DB"),
     "user": os.getenv("POSTGRES_USER"),
     "password": os.getenv("POSTGRES_PASSWORD"),

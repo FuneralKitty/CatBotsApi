@@ -1,5 +1,4 @@
 from typing import Any, Tuple, Dict
-from src.config import DB_CONFIG
 from src.data_fullfilling import (
     cat_colors_create_data,
     fullfill_cat_options,
@@ -53,5 +52,6 @@ def add_info() -> tuple[dict[str, str], int] | tuple[Response, int]:
 
 
 if __name__ == "__main__":
-    cat_colors_create_data(DB_CONFIG)
-    fullfill_cat_options(DB_CONFIG)
+    cat_colors_create_data()
+    fullfill_cat_options()
+
