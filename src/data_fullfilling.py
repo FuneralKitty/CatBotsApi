@@ -43,12 +43,12 @@ def table_exists(table_name: str) -> bool:
                     (table_name,),
                 )
     finally:
-        conn.close()
         POOL.putconn(conn)
     return cursor.fetchone()[0]
 
+
 def cat_colors_create_data() -> None:
-    conn =  POOL.getconn()
+    conn = POOL.getconn()
     try:
         with conn:
             with conn.cursor() as cursor:
@@ -63,7 +63,6 @@ def cat_colors_create_data() -> None:
                 """
                 )
     finally:
-        conn.close()
         POOL.putconn(conn)
 
 
@@ -94,7 +93,6 @@ def fullfill_cat_options() -> None:
                     ),
                 )
     finally:
-        conn.close()
         POOL.putconn(conn)
 
 
@@ -127,7 +125,6 @@ def add_info_db(data: Dict[str, Any]) -> Tuple[Dict[str, Any], int]:
         return ({"error": str(e)}, 500)
 
     finally:
-        conn.close()
         POOL.putconn(conn)
 
 
@@ -164,4 +161,5 @@ def get_parsed_data(attribute: str, order: str, offset: int, limit: int) -> tupl
                 return (data, 200)
     except Exception as e:
         return ({"error": str(e)}, 500)
-
+    finally:
+        POOL.putconn(conn)
