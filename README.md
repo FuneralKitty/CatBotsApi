@@ -140,6 +140,8 @@ A successful request returns a 200 status code along with json data like:
     curl -X GET http://localhost:8080/cats?attribute=color&order=asc&offset=5&limit=2
     ```
 **Add a Cat request(POST)**
+If the cat is already in the database, the API returns a 409 Conflict status code along with the message {"error": "Cat already exists"}. Otherwise, if the cat is successfully added, it returns a 201 Created status code with the message {"message": "Cat added successfully"}
+
   - Example:
     ```sh
     curl -X POST http://localhost:8080/cat \
