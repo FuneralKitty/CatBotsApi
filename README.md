@@ -150,9 +150,13 @@ A successful request returns a 200 status code along with json data like:
 ## Tests
 
 The repository includes unit tests using `pytest`. You can run the tests inside the Docker container with the command:
-```sh
-make test
-```
+    ```
+    make test
+    ```
+To test manually run:
+    ```
+    pytest
+    ```
 ---
 
 ## Dependencies
