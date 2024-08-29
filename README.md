@@ -8,8 +8,9 @@
   - [4. Manual setup](#4-manual-setuppostgresql-is-required)
     - [4.1 postgresql](#postgresql)
     - [4.1 flask](#running-app)
+- [Usage Examples](#tests)
 - [Run Tests](#tests)
-- [Dependencies](#5-tests)
+- [Dependencies](#dependencies)
 - [Additional Information](#additional-information)
 ---
 
@@ -39,14 +40,11 @@
 ## Project Description
 
 This repository contains a solution for the [backend-cats-api task](https://github.com/itc-code/test-assignments/tree/main/backend-cats-api). 
-The project is built with Flask and PostgreSQL, running in Docker containers.
 
-The CatBots API allows you to manage and query a database of cats. You can add new entries, retrieve lists of cats with specific attributes, 
-and handle common operations through a RESTful interface.
-
-API Endpoints include **Add a Cat (POST)**, where you can add a cat by sending a JSON payload with attributes like name, color, tail length, 
-and whiskers length. Another endpoint is **Retrieve Cats (GET)**, which allows you to retrieve a list of cats based on specific query parameters such as attribute and order.
-
+This project implements a RESTful API for managing a database of cats, built using Flask
+for the web framework, PostgreSQL for the database, and Docker for containerization.
+The API supports adding, retrieving, and querying cats’ data based on various attributes like name, 
+color, and tail length.
 ---
 
 ## Installation and Setup
@@ -92,7 +90,7 @@ GRANT ALL PRIVILEGES ON DATABASE wg_forge_db TO wg_forge;
 ```
 Then, run the SQL script `data.sql` on your database:
 ```sh
-psql --host=localhost --port=5432 --dbname=wg_forge_db --username=wg_forge --password --file=wg_forge_init.sql
+psql --host=localhost --port=5432 --dbname=wg_forge_db --username=wg_forge --password --file=data.sql
 ```
 
 #### Running App
@@ -108,6 +106,46 @@ pip3 install -r requirements.txt
 flask --app app run --port 8080
 ```
 ---
+## API ENDPOINTS
+The **ping** endpoint returns a simple message confirming the service status. 
+A successful request returns a 200 status code along with the message ‘Cats Service. Version 0.1’.
+  - Example:
+    ```
+    http://localhost:8080/ping
+    ```
+  - Example:
+    ```
+    curl -X GET http://localhost:8080/ping
+    ```
+The **cats** endpoint returns cats in the database. 
+A successful request returns a 200 status code along with json data like:
+  ```json
+  [{"name": "Tihon", "color": "red & white", "tail_length": 15, "whiskers_length": 12},
+  {"name": "Marfa", "color": "black & white", "tail_length": 13, "whiskers_length": 11}]
+  ```
+
+  - Example:
+    ```
+    http://localhost:8080/cats
+    ```
+  - Example:
+    ```
+    curl -X GET http://localhost:8080/cats
+    ```
+**Get cats with sorting by attributes(GET)**:
+  - Example:
+    ```
+    curl -X GET http://localhost:8080/cats?attribute=name&order=asc
+    curl -X GET http://localhost:8080/cats?attribute=tail_length&order=desc
+    curl -X GET http://localhost:8080/cats?attribute=color&order=asc&offset=5&limit=2
+    ```
+**Add a Cat request(POST)**
+  - Example:
+    ```sh
+    curl -X POST http://localhost:8080/cat \
+    -H "Content-Type: application/json" \
+    -d '{"name": "Tihon", "color": "red & white", "tail_length": 15, "whiskers_length": 12}'
+    ```
 
 ## Tests
 
