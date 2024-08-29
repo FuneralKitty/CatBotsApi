@@ -1,5 +1,4 @@
 from typing import Any, Tuple, Dict
-from src.config import DB_CONFIG
 from src.data_fullfilling import (
     cat_colors_create_data,
     fullfill_cat_options,
@@ -9,7 +8,7 @@ from src.data_fullfilling import (
 from flask import Flask, request, jsonify, Response
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from pydantic import BaseModel, field_validator, ValidationError
+from pydantic import BaseModel, Field, ValidationError
 
 
 app_name = "Cats Service"
@@ -19,24 +18,10 @@ limiter = Limiter(
 )
 
 class Cat(BaseModel):
-    name: str
-    color: str
-    tail_length: int
-    whiskers_length: int
-
-    @classmethod
-    @field_validator('tail_length')
-    def check_tail_length(cls, value):
-        if value <= 0:
-            raise ValueError("Tail length must be greater than zero")
-        return value
-
-    @classmethod
-    @field_validator('whiskers_length')
-    def check_whiskers_length(cls, value):
-        if value <= 0:
-            raise ValueError("Whiskers length must be greater than zero")
-        return value
+    name: str = Field(min_length=1)
+    color: str = Field(min_length=1)
+    tail_length: int = Field(gt=0)
+    whiskers_length: int = Field(gt=0)
 
 @app.route("/ping", methods=["GET"])
 def ping() -> Tuple[str, int]:
@@ -67,5 +52,6 @@ def add_info() -> tuple[dict[str, str], int] | tuple[Response, int]:
 
 
 if __name__ == "__main__":
-    cat_colors_create_data(DB_CONFIG)
-    fullfill_cat_options(DB_CONFIG)
+    cat_colors_create_data()
+    fullfill_cat_options()
+
