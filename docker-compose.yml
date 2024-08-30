@@ -3,11 +3,14 @@ version: '3.3'
 services:
   postgres:
     image: postgres:14.2-alpine
-    env_file: .env
+    environment:
+      POSTGRES_DB: wg_forge_db
+      POSTGRES_USER: wg_forge
+      POSTGRES_PASSWORD: 42a
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres_data:/var/lib/postgresql
+      - ./postgres_data:/var/lib/postgresql/data
       - ./data.sql:/docker-entrypoint-initdb.d/001.sql
 
   app:
@@ -22,3 +25,8 @@ services:
     env_file: .env
     depends_on:
       - postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      timeout: 40s
+      interval: 2s
+      retries: 20
