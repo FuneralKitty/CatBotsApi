@@ -6,8 +6,10 @@ from src.config import DB_CONFIG
 
 
 valid_attributes: List[str] = ["name", "color", "tail_length", "whiskers_length"]
-POOL = psycopg2.pool.SimpleConnectionPool(1,10,  database=DB_CONFIG["dbname"], user=DB_CONFIG["user"], password=DB_CONFIG["password"], port=DB_CONFIG["port"])
 
+POOL = psycopg2.pool.SimpleConnectionPool(1,10,  database=DB_CONFIG["dbname"],
+                                          user=DB_CONFIG["user"], password=DB_CONFIG["password"],
+                                          port=DB_CONFIG["port"], host=DB_CONFIG["host"])
 
 def save_stats(
     cursor,

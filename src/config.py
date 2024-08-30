@@ -8,7 +8,7 @@ DB_CONFIG = {
     "user": os.getenv("POSTGRES_USER"),
     "password": os.getenv("POSTGRES_PASSWORD"),
     "host": os.getenv("POSTGRES_HOST"),
-    "port": int(os.getenv("POSTGRES_PORT"))
+    "port": os.getenv("POSTGRES_PORT")
 }
 for i in DB_CONFIG.items():
     print(type(i), i)
