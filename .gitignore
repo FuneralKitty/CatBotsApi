@@ -3,7 +3,7 @@ instance/*
 !instance/.gitignore
 .webassets-cache
 .idea/misc.xml
-
+postgres_data
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -130,6 +130,7 @@ celerybeat.pid
 .venv
 venv/
 .env/
+.env
 env.bak/
 venv.bak/
 
