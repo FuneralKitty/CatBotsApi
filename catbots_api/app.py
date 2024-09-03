@@ -1,5 +1,5 @@
 from typing import Any, Tuple, Dict
-from src.data_fullfilling import (
+from catbots_api.data_fullfilling import (
     cat_colors_create_data,
     fullfill_cat_options,
     add_info_db,
@@ -8,8 +8,9 @@ from src.data_fullfilling import (
 from flask import Flask, request, jsonify, Response
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import ValidationError
 
+from catbots_api.models import Cat
 
 app_name = "Cats Service"
 app = Flask(__name__)
@@ -17,11 +18,6 @@ limiter = Limiter(
     app=app, key_func=get_remote_address, default_limits=["600 per minute"]
 )
 
-class Cat(BaseModel):
-    name: str = Field(min_length=1)
-    color: str = Field(min_length=1)
-    tail_length: int = Field(gt=0)
-    whiskers_length: int = Field(gt=0)
 
 @app.route("/ping", methods=["GET"])
 def ping() -> Tuple[str, int]:
@@ -49,9 +45,3 @@ def add_info() -> tuple[dict[str, str], int] | tuple[Response, int]:
 
     result: Tuple[Dict[str, Any], int] = add_info_db(data_cats.dict())
     return jsonify(result[0]), result[1]
-
-
-if __name__ == "__main__":
-    cat_colors_create_data()
-    fullfill_cat_options()
-

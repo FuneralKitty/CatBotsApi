@@ -1,7 +1,7 @@
 import pytest
 import time
 from flask import Flask, Response
-from app import app
+from catbots_api.app import app
 from typing import Dict, List, Union
 
 
@@ -70,7 +70,7 @@ def test_rate_limit(client: Flask) -> None:
     for _ in range(600):
         response: Response = client.get("/cats")
         assert response.status_code == 200, f"Failed at request {_ + 1}"
-        time.sleep(0.1)
+        time.sleep(0.001)
 
     response: Response = client.get("/cats")
     assert response.status_code == 429, "Expected 429 Too Many Requests"

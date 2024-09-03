@@ -1,13 +1,12 @@
-import psycopg2
 from psycopg2 import pool
 from typing import Optional, Any, List, Tuple, Dict
-from src.arithmetic_for_cats import mean, mediana, mode
-from src.config import DB_CONFIG
+from catbots_api.database import get_mean, get_mediana, get_mode
+from catbots_api.config import DB_CONFIG
 
 
 valid_attributes: List[str] = ["name", "color", "tail_length", "whiskers_length"]
-
-POOL = psycopg2.pool.SimpleConnectionPool(1,10,  database=DB_CONFIG["dbname"],
+print(DB_CONFIG)
+POOL = pool.SimpleConnectionPool(1,10,  database=DB_CONFIG["dbname"],
                                           user=DB_CONFIG["user"], password=DB_CONFIG["password"],
                                           port=DB_CONFIG["port"], host=DB_CONFIG["host"])
 
@@ -73,13 +72,13 @@ def fullfill_cat_options() -> None:
     try:
         with conn:
             with conn.cursor() as cursor:
-                tail_length_mean: float = mean(cursor, "tail_length")
-                tail_length_median: float = mediana(cursor, "tail_length")
-                tail_length_mode: float = mode(cursor, "tail_length")
+                tail_length_mean: float = get_mean(cursor, "tail_length")
+                tail_length_median: float = get_mediana(cursor, "tail_length")
+                tail_length_mode: float = get_mode(cursor, "tail_length")
 
-                whiskers_length_mean: float = mean(cursor, "whiskers_length")
-                whiskers_length_median: float = mediana(cursor, "whiskers_length")
-                whiskers_length_mode: float = mode(cursor, "whiskers_length")
+                whiskers_length_mean: float = get_mean(cursor, "whiskers_length")
+                whiskers_length_median: float = get_mediana(cursor, "whiskers_length")
+                whiskers_length_mode: float = get_mode(cursor, "whiskers_length")
 
                 cursor.execute("DELETE FROM cats_stat")
 
