@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2 import pool
 from typing import Optional, Any, List, Tuple, Dict
-from src.arithmetic_for_cats import mean, mediana, mode
+from src.database_math import mean, mediana, mode
 from src.config import DB_CONFIG
 
 
